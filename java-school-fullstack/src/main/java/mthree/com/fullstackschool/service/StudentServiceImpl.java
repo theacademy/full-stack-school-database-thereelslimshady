@@ -13,10 +13,17 @@ public class StudentServiceImpl implements StudentServiceInterface {
 
     //YOUR CODE STARTS HERE
     StudentDao studentDao;
+    CourseServiceInterface courseServiceInterface;
 
     @Autowired
     public StudentServiceImpl(StudentDao studentDao) {
         this.studentDao = studentDao;
+    }
+
+    @Autowired
+    public StudentServiceImpl(StudentDao studentDao, CourseServiceInterface courseServiceInterface) {
+        this.studentDao = studentDao;
+        this.courseServiceInterface = courseServiceInterface;
     }
 
 
@@ -25,31 +32,49 @@ public class StudentServiceImpl implements StudentServiceInterface {
     public List<Student> getAllStudents() {
         //YOUR CODE STARTS HERE
 
-        return null;
+        return studentDao.getAllStudents();
 
         //YOUR CODE ENDS HERE
     }
 
     public Student getStudentById(int id) {
         //YOUR CODE STARTS HERE
-
-        return null;
-
+        Student student = new Student();
+        try{
+            student= studentDao.findStudentById(id);
+        }catch (DataAccessException e){
+            student.setStudentFirstName("Student Not Found");
+            student.setStudentLastName("Student Not Found");
+        }
+        return student;
         //YOUR CODE ENDS HERE
     }
 
     public Student addNewStudent(Student student) {
         //YOUR CODE STARTS HERE
 
-        return null;
+        if (student.getStudentFirstName().trim().isEmpty() || student.getStudentLastName().trim().isEmpty()){
+            student.setStudentFirstName("First Name blank, student NOT added");
+            student.setStudentLastName("Last Name blank, student NOT added");
+        }else {
+            student = studentDao.createNewStudent(student);
+        }
+        return student;
 
         //YOUR CODE ENDS HERE
     }
 
     public Student updateStudentData(int id, Student student) {
         //YOUR CODE STARTS HERE
+        // If id is not equal to object id, then set FirstName and LastName = "IDs do not match, student not updated".
+        if (id != student.getStudentId()){
+            student.setStudentFirstName("IDs do not match, student not updated");
+            student.setStudentLastName("IDs do not match, student not updated");
 
-        return null;
+        }else {
+            studentDao.updateStudent(student);
+        }
+        return student;
 
         //YOUR CODE ENDS HERE
     }
@@ -57,7 +82,7 @@ public class StudentServiceImpl implements StudentServiceInterface {
     public void deleteStudentById(int id) {
         //YOUR CODE STARTS HERE
 
-
+        studentDao.deleteStudent(id);
 
         //YOUR CODE ENDS HERE
     }
@@ -65,14 +90,36 @@ public class StudentServiceImpl implements StudentServiceInterface {
     public void deleteStudentFromCourse(int studentId, int courseId) {
         //YOUR CODE STARTS HERE
 
-
+        Student student = getStudentById(studentId);
+        Course course = courseServiceInterface.getCourseById(courseId);
+        if (student.getStudentFirstName().equals("Student Not Found")){
+            System.out.println("Student Not Found");
+        }else if (course.getCourseName().equals("Course Not Found")){
+            System.out.println("Course not found");
+        }else{
+            studentDao.deleteStudentFromCourse(studentId, courseId);
+            System.out.printf("Student: %d deleted from course: %d", studentId, courseId);
+        }
 
         //YOUR CODE ENDS HERE
     }
 
     public void addStudentToCourse(int studentId, int courseId) {
         //YOUR CODE STARTS HERE
-
+        Student student = getStudentById(studentId);
+        Course course = courseServiceInterface.getCourseById(courseId);
+        if (student.getStudentFirstName().equals("Student Not Found")){
+            System.out.println("Student Not Found");
+        }else if (course.getCourseName().equals("Course Not Found")){
+            System.out.println("Course not found");
+        }else {
+            try {
+                studentDao.addStudentToCourse(studentId, courseId);
+                System.out.printf("Student: %d added to course: %d", studentId, courseId);
+            }catch (DataAccessException e){
+                System.out.printf("Student: %d already enrolled to course: %d", studentId, courseId);
+            }
+        }
 
         //YOUR CODE ENDS HERE
     }
