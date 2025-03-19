@@ -14,11 +14,10 @@ public class TeacherServiceImpl implements TeacherServiceInterface {
 
     TeacherDao teacherDao;
 
+    @Autowired
     public TeacherServiceImpl(TeacherDao teacherDao) {
         this.teacherDao = teacherDao;
     }
-
-    @Autowired
 
 
     //YOUR CODE ENDS HERE
@@ -26,7 +25,7 @@ public class TeacherServiceImpl implements TeacherServiceInterface {
     public List<Teacher> getAllTeachers() {
         //YOUR CODE STARTS HERE
 
-        return null;
+        return teacherDao.getAllTeachers();
 
         //YOUR CODE ENDS HERE
     }
@@ -34,17 +33,28 @@ public class TeacherServiceImpl implements TeacherServiceInterface {
     public Teacher getTeacherById(int id) {
         //YOUR CODE STARTS HERE
 
-
-            return null;
+        Teacher teacher = new Teacher();
+        try{
+            teacher= teacherDao.findTeacherById(id);
+        }catch (DataAccessException e){
+            teacher.setTeacherFName("Teacher Not Found");
+            teacher.setTeacherLName("Teacher Not Found");
+        }
+        return teacher;
 
         //YOUR CODE ENDS HERE
     }
 
     public Teacher addNewTeacher(Teacher teacher) {
         //YOUR CODE STARTS HERE
+        if (teacher.getTeacherFName().trim().isEmpty() || teacher.getTeacherLName().trim().isEmpty()){
+            teacher.setTeacherFName("First Name blank, teacher NOT added");
+            teacher.setTeacherLName("Last Name blank, teacher NOT added");
+        }else {
+            teacher = teacherDao.createNewTeacher(teacher);
+        }
+        return teacher;
 
-
-        return null;
 
         //YOUR CODE ENDS HERE
     }
@@ -52,8 +62,14 @@ public class TeacherServiceImpl implements TeacherServiceInterface {
     public Teacher updateTeacherData(int id, Teacher teacher) {
         //YOUR CODE STARTS HERE
 
+        if (id != teacher.getTeacherId()){
+            teacher.setTeacherFName("IDs do not match, teacher not updated");
+            teacher.setTeacherLName("IDs do not match, teacher not updated");
 
-        return null;
+        }else {
+            teacherDao.updateTeacher(teacher);
+        }
+        return teacher;
 
         //YOUR CODE ENDS HERE
     }
@@ -61,7 +77,7 @@ public class TeacherServiceImpl implements TeacherServiceInterface {
     public void deleteTeacherById(int id) {
         //YOUR CODE STARTS HERE
 
-
+        teacherDao.deleteTeacher(id);
 
         //YOUR CODE ENDS HERE
     }
