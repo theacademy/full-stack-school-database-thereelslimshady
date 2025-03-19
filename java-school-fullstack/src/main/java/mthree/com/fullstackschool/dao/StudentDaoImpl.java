@@ -3,6 +3,7 @@ package mthree.com.fullstackschool.dao;
 import mthree.com.fullstackschool.dao.mappers.StudentMapper;
 import mthree.com.fullstackschool.model.Student;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
@@ -28,9 +29,13 @@ public class StudentDaoImpl implements StudentDao {
     public Student createNewStudent(Student student) {
         //YOUR CODE STARTS HERE
 
+        // todo: verify if ids autoincrememt - yes, but DB = H2
+        final String INSERT_STUDENT = "insert into student(fName, lName) values (?,?)";
+        jdbcTemplate.update(INSERT_STUDENT, student.getStudentFirstName(), student.getStudentLastName());
 
-        return null;
-
+        int newId = jdbcTemplate.queryForObject("SELECT MAX(sid) FROM student", Integer.class);
+        student.setStudentId(newId);
+        return student;
 
         //YOUR CODE ENDS HERE
     }
@@ -39,8 +44,8 @@ public class StudentDaoImpl implements StudentDao {
     public List<Student> getAllStudents() {
         //YOUR CODE STARTS HERE
 
-
-        return null;
+        final String SELECT_ALL_STUDENTS = "select * from student";
+        return jdbcTemplate.query(SELECT_ALL_STUDENTS, new StudentMapper());
 
         //YOUR CODE ENDS HERE
     }
@@ -49,7 +54,13 @@ public class StudentDaoImpl implements StudentDao {
     public Student findStudentById(int id) {
         //YOUR CODE STARTS HERE
 
-        return null;
+        try{
+            final String SELECT_STUDENT_BY_ID = "select * from student where sid = ?";
+            return jdbcTemplate.queryForObject(SELECT_STUDENT_BY_ID, new StudentMapper(),id );
+        }
+        catch (DataAccessException e){
+            return null;
+        }
 
         //YOUR CODE ENDS HERE
     }
@@ -58,6 +69,8 @@ public class StudentDaoImpl implements StudentDao {
     public void updateStudent(Student student) {
         //YOUR CODE STARTS HERE
 
+        final String UPDATE_STUDENT= "update student set fName=?, lName= ? where sid= ?";
+        jdbcTemplate.update(UPDATE_STUDENT, student.getStudentFirstName(), student.getStudentLastName(), student.getStudentId());
 
         //YOUR CODE ENDS HERE
     }
@@ -66,6 +79,8 @@ public class StudentDaoImpl implements StudentDao {
     public void deleteStudent(int id) {
         //YOUR CODE STARTS HERE
 
+        final String DELETE_STUDENT = "delete from student where sid=?";
+        jdbcTemplate.update(DELETE_STUDENT, id);
 
         //YOUR CODE ENDS HERE
     }
@@ -74,8 +89,8 @@ public class StudentDaoImpl implements StudentDao {
     public void addStudentToCourse(int studentId, int courseId) {
         //YOUR CODE STARTS HERE
 
-
-
+        final String INSERT_STUDENT_COURSE_STUDENT = "insert into course_student(student_id, course_id) values (?,?)";
+        jdbcTemplate.update(INSERT_STUDENT_COURSE_STUDENT, studentId,courseId);
         //YOUR CODE ENDS HERE
     }
 
@@ -83,7 +98,8 @@ public class StudentDaoImpl implements StudentDao {
     public void deleteStudentFromCourse(int studentId, int courseId) {
         //YOUR CODE STARTS HERE
 
-
+        final String DELETE_STUDENT_COURSE_STUDENT = "delete from course_student where (student_id=? and course_id=?)";
+        jdbcTemplate.update(DELETE_STUDENT_COURSE_STUDENT, studentId,courseId);
 
         //YOUR CODE ENDS HERE
     }

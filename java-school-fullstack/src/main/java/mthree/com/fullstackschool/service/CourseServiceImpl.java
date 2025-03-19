@@ -12,7 +12,12 @@ public class CourseServiceImpl implements CourseServiceInterface {
 
     //YOUR CODE STARTS HERE
 
+    CourseDao courseDao;
 
+    @Autowired
+    public CourseServiceImpl(CourseDao courseDao) {
+        this.courseDao = courseDao;
+    }
 
     //YOUR CODE ENDS HERE
 
@@ -42,7 +47,7 @@ public class CourseServiceImpl implements CourseServiceInterface {
 
     public Course updateCourseData(int id, Course course) {
         //YOUR CODE STARTS HERE
-
+        // todo: teacherId can be null
         return null;
 
         //YOUR CODE ENDS HERE

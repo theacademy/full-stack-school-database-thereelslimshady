@@ -12,6 +12,14 @@ public class TeacherServiceImpl implements TeacherServiceInterface {
 
     //YOUR CODE STARTS HERE
 
+    TeacherDao teacherDao;
+
+    public TeacherServiceImpl(TeacherDao teacherDao) {
+        this.teacherDao = teacherDao;
+    }
+
+    @Autowired
+
 
     //YOUR CODE ENDS HERE
 

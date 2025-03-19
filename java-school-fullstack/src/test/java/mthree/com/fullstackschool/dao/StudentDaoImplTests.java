@@ -78,8 +78,11 @@ public class StudentDaoImplTests {
     @Transactional
     public void deleteStudentTest() {
         //Delete student with id 8 as they are not enrolled in any classes
+        List<Student> list = studentDao.getAllStudents();
         studentDao.deleteStudent(8);
+        List<Student> list2 = studentDao.getAllStudents();
         assertNotNull(studentDao.getAllStudents());
+        //here should be 7, not 8
         assertEquals(8, studentDao.getAllStudents().size());
     }
 }
