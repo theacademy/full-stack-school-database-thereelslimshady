@@ -84,7 +84,6 @@ public class StudentDaoImpl implements StudentDao {
         final String DELETE_STUDENT = "delete from student where sid=?";
         jdbcTemplate.update(DELETE_STUDENT, id);
 
-
         //YOUR CODE ENDS HERE
     }
 
