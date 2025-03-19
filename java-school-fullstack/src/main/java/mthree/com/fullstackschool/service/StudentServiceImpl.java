@@ -106,16 +106,16 @@ public class StudentServiceImpl implements StudentServiceInterface {
         //YOUR CODE STARTS HERE
         Student student = getStudentById(studentId);
         Course course = courseServiceInterface.getCourseById(courseId);
-        if (student.getStudentFirstName().equals("Student Not Found") || student==null){
+        if (student.getStudentFirstName().equals("Student Not Found") ){
             System.out.println("Student Not Found");
-        }else if (course.getCourseName().equals("Course Not Found") || course == null){
+        }else if (course.getCourseName().equals("Course Not Found") ){
             System.out.println("Course not found");
         }else {
             try {
                 studentDao.addStudentToCourse(studentId, courseId);
-                System.out.printf("Student: %d added to course: %d", studentId, courseId);
-            }catch (DataAccessException e){
-                System.out.printf("Student: %d already enrolled to course: %d", studentId, courseId);
+                System.out.printf("Student: %d added to course: %d\n", studentId, courseId);
+            }catch (IllegalArgumentException e){
+                System.out.printf("Student: %d already enrolled to course: %d\n", studentId, courseId);
             }
         }
 

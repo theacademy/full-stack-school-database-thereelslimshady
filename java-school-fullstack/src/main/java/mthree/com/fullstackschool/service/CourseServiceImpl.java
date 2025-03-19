@@ -60,7 +60,6 @@ public class CourseServiceImpl implements CourseServiceInterface {
 
     public Course updateCourseData(int id, Course course) {
         //YOUR CODE STARTS HERE
-        // todo: teacherId can be null
 
         if (id != course.getCourseId()){
             course.setCourseName("IDs do not match, course not updated");

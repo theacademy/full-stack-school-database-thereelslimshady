@@ -4,6 +4,8 @@ import mthree.com.fullstackschool.dao.mappers.StudentMapper;
 import mthree.com.fullstackschool.model.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
@@ -29,7 +31,6 @@ public class StudentDaoImpl implements StudentDao {
     public Student createNewStudent(Student student) {
         //YOUR CODE STARTS HERE
 
-        // todo: verify if ids autoincrememt - yes, but DB = H2
         final String INSERT_STUDENT = "insert into student(fName, lName) values (?,?)";
         jdbcTemplate.update(INSERT_STUDENT, student.getStudentFirstName(), student.getStudentLastName());
 
@@ -94,9 +95,12 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public void addStudentToCourse(int studentId, int courseId) {
         //YOUR CODE STARTS HERE
-
-        final String INSERT_STUDENT_COURSE_STUDENT = "insert into course_student(student_id, course_id) values (?,?)";
-        jdbcTemplate.update(INSERT_STUDENT_COURSE_STUDENT, studentId,courseId);
+        try{
+            final String INSERT_STUDENT_COURSE_STUDENT = "insert into course_student(student_id, course_id) values (?,?)";
+            jdbcTemplate.update(INSERT_STUDENT_COURSE_STUDENT, studentId,courseId);
+        } catch (DuplicateKeyException e) {
+            throw new IllegalArgumentException("Student is already enrolled in the course.", e);
+        }
         //YOUR CODE ENDS HERE
     }
 
