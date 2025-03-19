@@ -25,7 +25,7 @@ public class StudentController {
     @PostMapping("/add")
     public Student addStudent(@RequestBody Student student) {
         //YOUR CODE STARTS HERE
-
+        // if missing a key, will crash 500
         return studentServiceImpl.addNewStudent(student);
 
         //YOUR CODE ENDS HERE
@@ -43,7 +43,7 @@ public class StudentController {
     @PutMapping("/{id}")
     public Student updateStudent(@PathVariable int id, @RequestBody Student student) {
         //YOUR CODE STARTS HERE
-
+        //if id doesn't exist, returns 200 with empty
         return studentServiceImpl.updateStudentData(id,student);
 
         //YOUR CODE ENDS HERE
@@ -52,7 +52,7 @@ public class StudentController {
     @DeleteMapping("/{id}")
     public void deleteStudent(@PathVariable int id) {
         //YOUR CODE STARTS HERE
-
+        //try to delete a student with a class
         studentServiceImpl.deleteStudentById(id);
 
         //YOUR CODE ENDS HERE
