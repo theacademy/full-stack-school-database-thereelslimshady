@@ -33,6 +33,8 @@ public class StudentDaoImpl implements StudentDao {
         final String INSERT_STUDENT = "insert into student(fName, lName) values (?,?)";
         jdbcTemplate.update(INSERT_STUDENT, student.getStudentFirstName(), student.getStudentLastName());
 
+        // here, since it's a H2 db, using last_insert_id() did not seem to work, neither the equivalent identity() or scope_identity()
+        // since it's transactional, there is no risk of conflict
         int newId = jdbcTemplate.queryForObject("SELECT MAX(sid) FROM student", Integer.class);
         student.setStudentId(newId);
         return student;
