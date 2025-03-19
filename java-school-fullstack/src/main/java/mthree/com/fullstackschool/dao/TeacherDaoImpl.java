@@ -9,6 +9,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
@@ -82,7 +83,11 @@ public class TeacherDaoImpl implements TeacherDao {
     public void deleteTeacher(int id) {
         //YOUR CODE STARTS HERE
 
-        //todo verify if delete cascade or we need to delete from the bridge table as well
+        // since we don't have a delete cascade, this should be transactional
+        //teacher can be null in course table
+        final String UPDATE_TEACHER_FROM_COURSE = "update course set teacherId = null where teacherId=?";
+        jdbcTemplate.update(UPDATE_TEACHER_FROM_COURSE, id);
+
         final String DELETE_TEACHER = "delete from teacher where tid=?";
         jdbcTemplate.update(DELETE_TEACHER, id);
 

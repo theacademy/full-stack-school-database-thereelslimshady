@@ -78,6 +78,10 @@ public class CourseDaoImpl implements CourseDao {
     @Override
     public void deleteCourse(int id) {
         //YOUR CODE STARTS HERE
+        //this should be transactional
+
+        final String DELETE_COURSE_FROM_COURSE_STUDENT = "delete from course_student where course_id = ?";
+        jdbcTemplate.update(DELETE_COURSE_FROM_COURSE_STUDENT, id);
 
         final String DELETE_COURSE = "delete from course where cid=?";
         jdbcTemplate.update(DELETE_COURSE, id);

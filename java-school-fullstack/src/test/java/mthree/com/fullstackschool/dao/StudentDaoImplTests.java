@@ -77,11 +77,8 @@ public class StudentDaoImplTests {
     @DisplayName("Delete Student Test")
     @Transactional
     public void deleteStudentTest() {
-        //List<Student> list = studentDao.getAllStudents();
         studentDao.deleteStudent(8);
-        //List<Student> list2 = studentDao.getAllStudents();
         assertNotNull(studentDao.getAllStudents());
-        //changed this test!!
         assertEquals(7, studentDao.getAllStudents().size());
     }
 }

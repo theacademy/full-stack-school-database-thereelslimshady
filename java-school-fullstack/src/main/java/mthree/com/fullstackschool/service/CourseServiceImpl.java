@@ -33,10 +33,9 @@ public class CourseServiceImpl implements CourseServiceInterface {
     public Course getCourseById(int id) {
         //YOUR CODE STARTS HERE
 
-        Course course = new Course();
-        try{
-            course= courseDao.findCourseById(id);
-        }catch (DataAccessException e){
+        Course course = courseDao.findCourseById(id);
+        if (course == null){
+            course = new Course();
             course.setCourseName("Course Not Found");
             course.setCourseDesc("Course Not Found");
         }
@@ -79,6 +78,7 @@ public class CourseServiceImpl implements CourseServiceInterface {
         //YOUR CODE STARTS HERE
 
         try{
+
             courseDao.deleteCourse(id);
             System.out.printf("Course ID: %d deleted", id);
         }catch (DataAccessException e){

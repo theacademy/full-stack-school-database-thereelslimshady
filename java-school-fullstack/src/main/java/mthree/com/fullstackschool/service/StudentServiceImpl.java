@@ -38,10 +38,9 @@ public class StudentServiceImpl implements StudentServiceInterface {
 
     public Student getStudentById(int id) {
         //YOUR CODE STARTS HERE
-        Student student = new Student();
-        try{
-            student= studentDao.findStudentById(id);
-        }catch (DataAccessException e){
+        Student student = studentDao.findStudentById(id);
+        if (student == null){
+            student = new Student();
             student.setStudentFirstName("Student Not Found");
             student.setStudentLastName("Student Not Found");
         }
@@ -107,9 +106,9 @@ public class StudentServiceImpl implements StudentServiceInterface {
         //YOUR CODE STARTS HERE
         Student student = getStudentById(studentId);
         Course course = courseServiceInterface.getCourseById(courseId);
-        if (student.getStudentFirstName().equals("Student Not Found")){
+        if (student.getStudentFirstName().equals("Student Not Found") || student==null){
             System.out.println("Student Not Found");
-        }else if (course.getCourseName().equals("Course Not Found")){
+        }else if (course.getCourseName().equals("Course Not Found") || course == null){
             System.out.println("Course not found");
         }else {
             try {

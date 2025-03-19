@@ -80,6 +80,10 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public void deleteStudent(int id) {
         //YOUR CODE STARTS HERE
+        //this should be transactional
+
+        final String DELETE_STUDENT_FROM_COURSE_STUDENT = "delete from course_student where student_id = ?";
+        jdbcTemplate.update(DELETE_STUDENT_FROM_COURSE_STUDENT, id);
 
         final String DELETE_STUDENT = "delete from student where sid=?";
         jdbcTemplate.update(DELETE_STUDENT, id);
